@@ -3,64 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dispatch Skool - Full Screen Preview</title>
+    <title>Dispatch Skool - Reader View</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Hidden by default */
         #previewModal { display: none; }
-        .modal-overlay { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px); }
+        .browser-shadow { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen p-6">
+<body class="bg-slate-200 min-h-screen p-4 md:p-10 font-sans">
 
-    <div class="max-w-3xl mx-auto">
-        <div class="bg-white rounded-2xl shadow-sm border p-8">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-xl font-bold text-slate-800">Step 4: Craft Your Email</h1>
-                <button onclick="openPreview()" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700 transition flex items-center gap-2">
-                    👁️ Preview Email
+    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-300">
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-black text-slate-800 tracking-tight">Email Designer</h1>
+                    <p class="text-slate-500 text-sm">Design your message, then see it through your lead's eyes.</p>
+                </div>
+                <button onclick="openPreview()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center gap-2">
+                    <span>👁️ See Reader View</span>
                 </button>
             </div>
 
-            <div class="space-y-4">
+            <div class="space-y-6">
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Subject Line</label>
-                    <input type="text" id="subjectInput" value="Load for [Legal Name] - MC [MC Number]" 
-                           class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Email Subject Line</label>
+                    <input type="text" id="subjectInput" value="Quick Question for [Legal Name] regarding MC [MC Number]" 
+                           class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-blue-500 transition-all text-slate-700 font-medium">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Message Body (HTML)</label>
-                    <textarea id="bodyInput" class="w-full h-80 p-4 bg-slate-50 border rounded-xl font-mono text-sm outline-none focus:ring-2 focus:ring-blue-500" placeholder="Paste your HTML here..."></textarea>
+                    <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Message Content (HTML or Text)</label>
+                    <textarea id="bodyInput" class="w-full h-80 p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl font-mono text-sm outline-none focus:border-blue-500 transition-all" placeholder="Paste your HTML here..."></textarea>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="previewModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-10">
-        <div class="absolute inset-0 modal-overlay" onclick="closePreview()"></div>
+    <div id="previewModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closePreview()"></div>
         
-        <div class="bg-white w-full max-w-4xl max-h-full rounded-3xl shadow-2xl z-10 overflow-hidden flex flex-col">
-            <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
-                <div class="flex gap-2 items-center">
-                    <div class="w-3 h-3 bg-red-400 rounded-full"></div>
-                    <span class="text-sm font-medium text-slate-500">Live Desktop Preview</span>
+        <div class="bg-white w-full max-w-5xl h-[85vh] rounded-2xl z-10 overflow-hidden flex flex-col browser-shadow animate-in fade-in zoom-in duration-300">
+            
+            <div class="bg-[#ebedef] border-b p-3 flex items-center">
+                <div class="flex gap-2 px-2">
+                    <div class="w-3 h-3 bg-[#ff5f56] rounded-full"></div>
+                    <div class="w-3 h-3 bg-[#ffbd2e] rounded-full"></div>
+                    <div class="w-3 h-3 bg-[#27c93f] rounded-full"></div>
                 </div>
-                <button onclick="closePreview()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+                <div class="mx-auto bg-white border rounded-md px-4 py-1 text-[11px] text-slate-400 w-1/2 text-center truncate">
+                    https://mail.google.com/inbox/message/88234
+                </div>
+                <button onclick="closePreview()" class="px-3 text-slate-400 hover:text-slate-800 font-bold text-xl">&times;</button>
             </div>
 
-            <div class="flex-1 overflow-y-auto bg-slate-200 p-4 md:p-12">
-                <div class="bg-white max-w-[600px] mx-auto shadow-lg rounded-sm overflow-hidden min-h-[400px]">
-                    <div class="p-6 border-b bg-white">
-                        <div class="text-sm text-slate-400">Subject:</div>
-                        <div id="modalSubject" class="text-lg font-bold text-slate-800"></div>
+            <div class="flex-1 overflow-y-auto bg-white flex flex-col">
+                <div class="p-6 md:p-10 border-b">
+                    <h2 id="modalSubject" class="text-2xl text-slate-800 mb-6 font-normal"></h2>
+                    
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 font-bold text-xl">D</div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-slate-800">Dispatch Team</span>
+                                <span class="text-xs text-slate-400">&lt;dispatch@your-system.com&gt;</span>
+                            </div>
+                            <div class="text-xs text-slate-500">to [Legal Name] (Lead)</div>
+                        </div>
                     </div>
-                    <div id="modalBody" class="p-8"></div>
+                </div>
+
+                <div class="p-6 md:p-10 flex-1">
+                    <div id="modalBody" class="max-w-[700px] text-slate-800">
+                        </div>
                 </div>
             </div>
-            
-            <div class="p-4 border-t bg-white text-center">
-                <button onclick="closePreview()" class="px-8 py-2 bg-slate-800 text-white rounded-full font-bold">Close Preview</button>
+
+            <div class="p-4 bg-slate-50 border-t flex justify-center">
+                <button onclick="closePreview()" class="bg-slate-800 text-white px-10 py-2 rounded-full font-bold hover:bg-black transition">Done Reviewing</button>
             </div>
         </div>
     </div>
@@ -71,7 +90,8 @@
             const body = document.getElementById('bodyInput').value;
 
             document.getElementById('modalSubject').innerText = subject;
-            // Renders HTML correctly and converts new lines to breaks
+            
+            // This renders the actual HTML tags properly
             document.getElementById('modalBody').innerHTML = body.replace(/\n/g, '<br>');
             
             document.getElementById('previewModal').style.display = 'flex';
@@ -81,13 +101,22 @@
             document.getElementById('previewModal').style.display = 'none';
         }
 
-        // Default Content for Test
-        document.getElementById('bodyInput').value = `<div style="font-family: sans-serif; border: 2px solid #1a56db; padding: 20px; border-radius: 10px;">
-    <h2 style="color: #1a56db;">New Load Alert</h2>
-    <p>We have a load for <b>[Legal Name]</b>.</p>
-    <p>MC Number: <b>[MC Number]</b></p>
-    <div style="background: #1a56db; color: white; padding: 10px; text-align: center; border-radius: 5px; font-weight: bold;">
-        CLICK TO ACCEPT LOAD
+        // Set up the high-converting template you liked earlier
+        document.getElementById('bodyInput').value = `<div style="font-family: sans-serif; max-width: 600px;">
+    <p>Hello <b>[Legal Name]</b>,</p>
+    <p>We have an urgent high-paying load available for your MC <b>[MC Number]</b>.</p>
+    
+    <div style="background: #f0f7ff; border: 1px solid #1a56db; padding: 20px; border-radius: 12px; margin: 20px 0;">
+        <h3 style="margin-top:0; color:#1a56db;">Load Details</h3>
+        <p style="margin-bottom:0;">Origin: <b>Your Local Area</b><br>Rate: <b>Top Market Pay</b></p>
+    </div>
+
+    <p>Would you like to see the rate sheet?</p>
+    
+    <div style="margin-top: 25px;">
+        <a href="#" style="background: #1a56db; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+            YES, SEND RATE SHEET
+        </a>
     </div>
 </div>`;
     </script>
