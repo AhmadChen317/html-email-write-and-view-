@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dispatch Skool - Live Email Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #preview-frame {
+            background-color: white;
+            min-height: 400px;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+    <div class="max-w-6xl mx-auto p-4 md:p-8">
+        <header class="mb-6">
+            <h1 class="text-2xl font-bold text-slate-800">Step 4: Craft Your Message</h1>
+            <p class="text-slate-500">Type your message below and see how it looks to your leads instantly.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Email Subject</label>
+                    <input type="text" id="subject-input" oninput="updatePreview()" 
+                           placeholder="Ex: Available Load for [Legal Name]"
+                           class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-bold text-slate-700 uppercase tracking-wide">Message Body (HTML Supported)</label>
+                        <span class="text-xs text-blue-600 font-medium">Auto-Saving...</span>
+                    </div>
+                    <textarea id="body-input" oninput="updatePreview()" 
+                              class="w-full h-80 p-4 font-mono text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                              placeholder="Hello [Legal Name],&#10;&#10;We have a high-paying load for your MC [MC Number].&#10;&#10;<b>Contact us today!</b>"></textarea>
+                </div>
+                
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <button onclick="insertTag('[Legal Name]')" class="px-2 py-1 bg-slate-100 border text-xs rounded hover:bg-slate-200">+ Legal Name</button>
+                    <button onclick="insertTag('[MC Number]')" class="px-2 py-1 bg-slate-100 border text-xs rounded hover:bg-slate-200">+ MC Number</button>
+                    <button onclick="insertTag('<b>', '</b>')" class="px-2 py-1 bg-slate-100 border text-xs rounded hover:bg-slate-200"><b>B</b></button>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="flex gap-2 mb-2">
+                    <button class="px-4 py-1 bg-slate-800 text-white text-xs rounded-full">Desktop Preview</button>
+                    <button onclick="alert('Mobile view coming soon!')" class="px-4 py-1 bg-white text-slate-600 border text-xs rounded-full hover:bg-slate-50">Mobile View</button>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-50 border-b p-3 flex items-center gap-2">
+                        <div class="flex gap-1.5">
+                            <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-amber-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                        </div>
+                        <div class="ml-4 bg-white border rounded px-3 py-0.5 text-xs text-slate-400 w-full max-w-sm truncate">
+                            New Message: <span id="preview-subject-header" class="text-slate-600">...</span>
+                        </div>
+                    </div>
+
+                    <div class="p-8">
+                        <div id="preview-subject" class="text-xl font-bold text-slate-900 mb-6"></div>
+                        <div id="preview-frame" class="prose prose-slate max-w-none">
+                            </div>
+                    </div>
+                </div>
+                <p class="text-center text-xs text-slate-400 italic font-medium">Placeholders like [Legal Name] will be replaced with actual lead data during sending.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function updatePreview() {
+            const subject = document.getElementById('subject-input').value;
+            const body = document.getElementById('body-input').value;
+
+            // Update Subject
+            document.getElementById('preview-subject').innerText = subject || "Subject Line";
+            document.getElementById('preview-subject-header').innerText = subject || "New Message";
+
+            // Update Body (Convert newlines to <br> if no HTML present, or just render HTML)
+            const previewFrame = document.getElementById('preview-frame');
+            
+            // This is the magic part: it renders the HTML directly
+            previewFrame.innerHTML = body.replace(/\n/g, '<br>');
+        }
+
+        function insertTag(startTag, endTag = '') {
+            const textarea = document.getElementById('body-input');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            const before = text.substring(0, start);
+            const after = text.substring(end, text.length);
+            const selected = text.substring(start, end);
+
+            textarea.value = before + startTag + selected + endTag + after;
+            textarea.focus();
+            updatePreview();
+        }
+
+        // Initialize with default text
+        document.getElementById('body-input').value = "Hello <b>[Legal Name]</b>,\n\nWe saw that your carrier company is operating under <b>MC [MC Number]</b>.\n\nAre you looking for higher paying loads this week? Please let us know!\n\nBest,\nDispatch Team";
+        updatePreview();
+    </script>
+</body>
+</html>
